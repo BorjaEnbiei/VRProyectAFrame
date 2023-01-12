@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A-Frame: Quest movement and interaction</title>
+    <meta name="description" content="Moving around an A-Frame scene with Quest touch controllers.">
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="js/aframe-environment-component.js"></script>
+    <script src="js/controller-listener.js"></script>
+    <script src="js/player-move.js"></script>
+    <script src="js/raycaster-extras.js"></script>
+  </head>
+
+  <body>
+
+    <script>
+      AFRAME.registerComponent('clickpc', {
+        init: function () {
+          var el = this.el;
+          el.addEventListener('click', function () {
+            let x = 1+Math.random() * 10;
+            let y = 1.5+Math.random() * 10;
+            let z = 1+Math.random() * 10;
+            el.setAttribute('position', x.toString()+' '+y.toString()+' '+ z.toString());
+          });
+        } 
+      });
+    </script>
+    
+<script>
+// if raycaster is pointing at this object, press trigger to change color
+AFRAME.registerComponent("move", {
+    init: function () 
+    {
+        this.controllerData = document.querySelector("#controller-data").components["controller-listener"];        
+        this.hoverData      = this.el.components["raycaster-target"]; 
+    },
+
+    tick: function()
+    {
+      
+      
+        if (this.hoverData.hasFocus && this.controllerData.rightTrigger.pressed)
+        {
+          let x = 1+Math.random() * 10;
+          let y = 1.5+Math.random() * 10;
+          let z = 1+Math.random() * 10;
+          this.el.setAttribute('position', x.toString()+' '+y.toString()+' '+ z.toString());
+        }
+        if (this.hoverData.hasFocus && this.controllerData.leftTrigger.pressed)
+        {
+          let x = 1+Math.random() * 10;
+          let y = 1.5+Math.random() * 10;
+          let z = 1+Math.random() * 10;
+          this.el.setAttribute('position', x.toString()+' '+y.toString()+' '+ z.toString());
+        }
+    }
+});
+
+
+</script>
+  <a-scene environment="preset: default;" renderer="antialias: true;">
+
+    <a-assets>
+        <img id="gradient" src="https://cdn.glitch.global/e4da1751-9c38-44ff-a836-aa6df86a3207/gradient-fade.png?v=1668769855609" />
+        <img id="floor" src="https://cdn.glitch.global/e4da1751-9c38-44ff-a836-aa6df86a3207/grassy_cobblestone_diff_1k.jpg?v=1668772863953" />
+        <img id="dummy" src="https://cdn.glitch.global/e4da1751-9c38-44ff-a836-aa6df86a3207/earth.jpg?v=1669366382243" />
+    </a-assets>
+    
+    <a-sky
+        material = "src  : #dummy"
+       >
+    </a-sky>
+
+    <!-- use a simple mesh for raycasting/navigation -->
+    <a-box physx-body="type: static;"
+           class="environmentGround"
+           physx-material="restitution: 0.5;"
+           position="0 0.5 0"
+           width="1000" depth="1000" height="0.1"
+           material="src: #floor; repeat: 100 100;"
+           shadow="receive: true;" 
+           >
+    </a-box>
+    
+    <a-entity 
+      id="player" 
+      position="0 0 0" 
+      player-move="controllerListenerId: #controller-data;
+                     navigationMeshClass: groundPlane;">
+        
+      <a-camera>
+        <a-cursor></a-cursor>
+      </a-camera>
+    
+      <a-entity 
+        id="controller-data" 
+        controller-listener="leftControllerId:  #left-controller; 
+        rightControllerId: #right-controller;">
+        
+      </a-entity>
+
+      <a-entity 
+        id="left-controller"
+        oculus-touch-controls="hand: left"
+        vive-controls="hand: left"
+        raycaster="objects: .raycaster-target; interval: 0;"
+        raycaster-extras="controllerListenerId: #controller-data; beamLength: 2;">
+      </a-entity>
+
+      <a-entity
+        id="right-controller"
+        oculus-touch-controls="hand: right"
+        vive-controls="hand: right"
+        oculus-go-controls="hand: right"
+        raycaster="objects: .raycaster-target; interval: 0;"
+        raycaster-extras="controllerListenerId: #controller-data; beamLength: 2;">
+      </a-entity>
+
+    </a-entity>
+    
+    <a-sphere
+      material = "src  : #dummy"
+      radius = "0.5"
+      position = "0 1.25 -8"
+      color = "#DDBB00"
+      raycaster-target
+      move
+      clickpc>
+    </a-sphere>
+      
+  </a-scene>
+  </body>
+</html>

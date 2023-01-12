@@ -1,5 +1,3 @@
-# A-Frame Project
+# A-Frame VR Proyect
 
-Built with [A-Frame](https://aframe.io), a web framework for building virtual reality experiences. Make WebVR with HTML and Entity-Component. Works on Vive, Rift, desktop, mobile platforms.
-
-Click and drag on desktop. Open it on a smartphone and use the device motion sensors. Or [plug in a VR headset](https://webvr.rocks)!
+La Experiencia consiste en una esfera que cambia de posición cada vez que apuntas a ella y haces click con el ratón del pc, presionas el botón del controlador de MetaQuest o HTC Vive e incluso tocando la pantalla del móvil mientras el cursor apunta a la esfera.
